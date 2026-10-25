@@ -1,0 +1,83 @@
+Step-by-Step Guide: Building a FastAPI + Next.js Workspace
+
+1. System Requirements
+Before beginning, ensure the following global dependencies are installed:
+* Node.js (LTS version): Required to run npm and npx commands for the frontend.
+* Git: Required for version control.
+* Python: Required to create the backend virtual environment.
+
+2. Workspace Initialization
+Open your terminal and create the root project directory:
+```bash
+mkdir coffee-shop-app
+cd coffee-shop-app
+```
+
+3. Backend Setup (FastAPI)
+1. Create the backend folder and initialize a Python virtual environment:
+```bash
+mkdir backend
+cd backend
+python -m venv venv
+```
+
+2. Activate the virtual environment:
+   * Windows: venv\Scripts\activate (Note: If this fails due to execution policies, run Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser first).
+   * Mac/Linux: source venv/bin/activate
+
+3. Install FastAPI and the Uvicorn server:
+```bash
+pip install fastapi "uvicorn[standard]"
+```
+3.5. Windows PowerShell is blocking the execution of virtual environment scripts:
+```
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+4. Create the main.py entry point with CORS configured. This tells the backend to allow requests from your frontend:
+```python
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI()
+
+# Configure CORS to allow the Next.js frontend to communicate with FastAPI
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # The URL of your Next.js app
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows GET, POST, PUT, DELETE, etc.
+    allow_headers=["*"], # Allows all headers
+)
+
+@app.get("/")
+async def root():
+    return {"message": "The coffee shop backend is live!"}
+```
+
+5. Start the development server (runs on http://localhost:8000):
+```bash
+uvicorn main:app --reload
+```
+
+4. Frontend Setup (Next.js & shadcn/ui)
+
+1. Open a new terminal tab and ensure you are in the root coffee-shop-app directory. 
+2. Scaffold the Next.js application using the recommended defaults (TypeScript, ESLint, Tailwind CSS, App Router):
+```bash
+npx create-next-app@latest frontend
+```
+3. Navigate into the frontend directory and initialize the UI component library (choose the Base UI recommendation and the Nova preset for styling):
+```bash
+cd frontend
+npx shadcn@latest init
+```
+4. Install your first reusable UI components:
+```bash
+npx shadcn@latest add button card
+```
+5. Replace the boilerplate code in app/page.tsx with your custom UI. 
+6. Start the development server (runs on http://localhost:3000):
+```bash
+npm run dev
+```
