@@ -10,4 +10,5 @@ class DBMenuItem(Base):
     description = Column(String)
     price = Column(Float)
     available = Column(Boolean, default=True)
+    image_url = Column(String, nullable=True)
 

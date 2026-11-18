@@ -7,6 +7,7 @@ class MenuItem(BaseModel):
     description: str
     price: float
     available: bool = True
+    image_url: str | None = None
 
     # Instructs Pydantic to seamlessly translate raw SQLAlchemy ORM objects into dictionaries
     class Config:
